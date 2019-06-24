@@ -1,0 +1,158 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     convectiveFoamParticle;
+
+startTime       0;
+
+startFrom       startTime;
+
+
+stopAt          endTime;
+
+endTime         7.5; //30;
+
+deltaT          1e-2;
+
+adjustTimeStep  yes;
+maxCo           1.5;
+maxDeltaT       1e-1;
+
+writeControl    runTime;
+
+writeInterval   0.04166666666;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  12;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   8;
+
+runTimeModifiable yes;
+
+
+libs (
+    "libOpenFOAM.so"
+    "libatmosphericModels.so"
+    "libgroovyBC.so"
+    "libswakFunctionObjects.so"
+    "libsimpleSwakFunctionObjects.so"
+    "libswakMeshWaveFunctionPlugin.so"
+);
+
+
+/*
+functions {
+    onlyOnce {
+        type executeIfStartTime;
+        readDuringConstruction true;
+        runIfStartTime true;
+        constructUnconditionally true;
+        functions {
+
+            distanceToIn {
+                type expressionField;
+                outputControl   timeStep;
+                outputInterval 1;
+                expression "distToPatch(inlet)";
+                fieldName distanceI;
+                autowrite true;
+            }
+
+            distanceToOut {
+                type expressionField;
+                outputControl   timeStep;
+                outputInterval 1;
+                expression "distToPatch(outlet)";
+                fieldName distanceO;
+                autowrite true;
+            }
+
+            distanceToTerrain {
+                type expressionField;
+                outputControl   timeStep;
+                outputInterval 1;
+                expression "distToPatch(terrain)";
+                fieldName distanceG;
+                autowrite true;
+            }
+
+            distanceToTop {
+                type expressionField;
+                outputControl   timeStep;
+                outputInterval 1;
+                expression "distToPatch(top)";
+                fieldName distanceT;
+                autowrite true;
+            }
+
+            distanceToEast {
+                type expressionField;
+                outputControl   timeStep;
+                outputInterval 1;
+                expression "distToPatch(east)";
+                fieldName distanceE;
+                autowrite true;
+            }
+
+            distanceToWest {
+                type expressionField;
+                outputControl   timeStep;
+                outputInterval 1;
+                expression "distToPatch(west)";
+                fieldName distanceW;
+                autowrite true;
+            }
+         
+            ppmTotal {
+                type expressionField;
+                outputControl   timeStep;
+                outputInterval 1;
+                expression "0.0";
+                fieldName ppmTotal;
+                autowrite true;
+            }
+
+            filamentVisits {
+                type expressionField;
+                outputControl   timeStep;
+                outputInterval 1;
+                expression "0.0";
+                fieldName filamentVisits;
+                autowrite true;
+            }
+
+            cellVolume {
+                type expressionField;
+                outputControl   timeStep;
+                outputInterval 1;
+                expression "vol()";
+                fieldName cellVolume;
+                autowrite true;
+            }
+        }
+    }
+    
+}
+*/
+
+// ************************************************************************* //

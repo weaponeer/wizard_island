@@ -1,0 +1,57 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#./vtkstl_from_geotiff.py --theta 0.0 --tsize="3500,5000,400" --inputGeoTif ./cdem_dem_082P_nad83utm12n_clipped.tif --outputPrefix ./foofile_deg_300_00
+#./vtkstl_from_geotiff.py --theta 0.00 --tsize="5500,5000,4000" --inputGeoTif ./clipped_crater.tif --srcCoord="569773.30,4754164.50,2084.0454,100.0" --outputPrefix wiz_deg_00
+
+
+#./deploy.sh
+
+
+runApplication blockMesh
+
+cp 0/T.orig 0/T
+
+#runApplication funkySetFields -time 0
+
+cp system/decomposeParDict.hierarchical system/decomposeParDict
+runApplication decomposePar -copyZero
+
+cp system/decomposeParDict.ptscotch system/decomposeParDict
+runParallel snappyHexMesh -overwrite
+
+cp system/decomposeParDict.hierarchical system/decomposeParDict
+
+# Get the number of processors to run on from system/decomposeParDict
+nProc=$(getNumberOfProcessors)
+
+runParallel collapseEdges -collapseFaces #$nProc -latestTime -collapseFaces
+mv log.collapseEdges log.collapseFaces
+
+runParallel collapseEdges -collapseFaceSet indirectPatchFaces #$nProc -latestTime -collapseFaceSet indirectPatchFaces
+mv log.collapseEdges log.collapseFaceSet
+
+runParallel checkMesh -allTopology -allGeometry
+
+runParallel funkySetFields -time 0
+
+find . -type f -iname "*level*" -exec rm {} \;
+
+runParallel topoSet
+
+
+runParallel $(getApplication)
+
+runApplication reconstructParMesh -constant
+runApplication reconstructPar -constant
+
+runApplication foamToVTK -noInternal -excludePatches '(top east west inlet outlet terrain)'
+
+#runApplication postProcess -func writeCellVolumes
+#runParallel foamToVTK 
+
+
+# ------------------------------------------------------------------------------

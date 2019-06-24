@@ -1,0 +1,207 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  5.x                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      kinematicCloudProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solution
+{
+    active          true;
+    coupled         true;
+    transient       yes;
+    cellValueSourceCorrection off;
+    maxCo           2.0; 
+
+    interpolationSchemes
+    {
+        rho             cell;
+        U               cellPoint;
+        mu              cell;
+        T               cell;
+	    DUcDt           cellPoint;
+    }
+
+    integrationSchemes
+    {
+        U               Euler;
+        T               Euler;
+    }
+
+    sourceTerms
+    {
+        schemes
+        {
+            U           semiImplicit 1;
+        }
+    }
+}
+
+constantProperties
+{
+    rho0            2570; //andesite 
+    youngsModulus   5.4e3;
+    poissonsRatio   0.18;
+}
+
+subModels
+{
+    particleForces
+    {
+        sphereDrag on;
+        
+        gravity on;
+        //virtualMass off;
+
+
+	pressureGradient {
+		U  U;
+	}
+    }
+
+    injectionModels
+    {
+
+    model3
+	{
+            type             patchInjection;
+            parId        3;
+            patchName        theVent;
+            duration         1.5;
+	        parcelsPerSecond 750;
+            massTotal        50000;
+            parcelBasisType  fixed;
+            flowRateProfile  constant 1;
+            nParticle        1;
+            SOI              0.00000;
+            U0               ( 0 0 -150);
+            sizeDistribution
+            {
+                type        fixedValue;
+                fixedValueDistribution
+                {
+                    value	1;
+                }
+            }
+        }
+
+	model2
+	{
+            type             patchInjection;
+            parId        2;
+            patchName        theVent;
+            duration         30;
+	        parcelsPerSecond 20000;
+            massTotal        250000;
+            parcelBasisType  fixed;
+            flowRateProfile  constant 1;
+            nParticle        100;
+            SOI              0.00000;
+            U0               ( 0 0 -750);
+            sizeDistribution
+            {
+                type        fixedValue;
+                fixedValueDistribution
+                {
+                    value	1e-5;
+                }
+            }
+        }
+
+  
+        model1
+        {
+                type            patchInjection;
+                parId       1;
+                massTotal       500000;
+                SOI             0.00000;
+                parcelBasisType mass;
+                patchName       theVent;
+                duration        30;
+                parcelsPerSecond 5000;
+                U0              (0 0 -40);
+                flowRateProfile constant 1;
+                sizeDistribution
+                {
+                    type        normal;
+                    normalDistribution
+                    {
+                        expectation 5.0e-2;
+                        variance 8.5e-1;
+                        minValue 1e-2;
+                        maxValue 1.5;
+                    }
+                }
+        }
+}
+
+    dispersionModel none;
+
+    patchInteractionModel standardWallInteraction;
+
+    standardWallInteractionCoeffs
+    {
+        type rebound;
+        e    0.97;
+        mu   0.09;
+    }
+
+    surfaceFilmModel none;
+
+    stochasticCollisionModel none;
+    
+    collisionModel none;    
+
+    pairCollisionCoeffs
+    {
+        maxInteractionDistance  1.5; //0.00007;
+
+        writeReferredParticleCloud no;
+
+        pairModel pairSpringSliderDashpot;
+
+        pairSpringSliderDashpotCoeffs
+        {
+            useEquivalentSize   no;
+            alpha               0.12;
+            b                   1.5;
+            mu                  0.52;
+            cohesionEnergyDensity 0;
+            collisionResolutionSteps 12;
+        };
+        
+        wallModel wallSpringSliderDashpot;
+
+        wallSpringSliderDashpotCoeffs
+        {
+            useEquivalentSize no;
+            collisionResolutionSteps 12;
+            youngsModulus   1e10;
+            poissonsRatio   0.23;
+            alpha           0.12;
+            b               1.5;
+            mu              0.43;
+            cohesionEnergyDensity 0;
+        };
+    }
+}
+
+cloudFunctions
+{
+    voidFraction1
+    {
+        type            voidFraction;
+    }
+}
+
+// ************************************************************************* //

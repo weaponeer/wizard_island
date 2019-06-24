@@ -1,0 +1,81 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+expressions (
+
+    tempOne {
+        field T;
+        keepPatches true;
+        expression "291.0";
+        condition "pos().z < 3000";
+    }
+
+    tempTwo {
+        field T;
+        keepPatches true;
+        //expression "291.0";
+        expression "258.0";
+        condition "pos().z >= 3050";
+    }
+
+    
+
+    tempThree {
+        field U;
+        keepPatches true;
+        variables ( 
+
+            "radius=50.0;"
+            "zedvec=vector(0,0,1);" 
+            "outvec=vector(0,-1,0);"                       
+		);
+        expression "5.0*outvec";
+        condition "pos().z < 2500";
+    }
+    /*
+    tempFour {
+        field U;
+        keepPatches true;
+        variables ( 
+
+            "radius=50.0;"
+            "zedvec=vector(0,0,1);" 
+            "outvec=vector(-1.0,0,0);"                       					
+		);
+
+        expression "45.0*outvec";
+        condition "(pos().z >= 2550) && (pos().z <= 3050)";
+    }
+
+    tempFive {
+        field U;
+        keepPatches true;
+        variables ( 
+
+            "radius=00.0;"
+            "zedvec=vector(0,0,1);" 
+            "outvec=vector(1.0,0,0);"                       					
+		);
+
+        expression "90.0*outvec";
+        condition "pos().z >= 3050";
+    }
+
+    */
+    
+);

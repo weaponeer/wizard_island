@@ -1,0 +1,155 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  6
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "include/initialConditions"
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform $flowVelocity;
+
+boundaryField
+{
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      uniform (0 0 0);
+        value           $internalField;
+    }
+
+    /*
+    inlet
+    {
+        type            atmBoundaryLayerInletVelocity;
+        #include        "include/ABLConditions"
+    }
+    */
+
+    inlet
+    {
+        type            turbulentInlet;
+        fluctuationScale (0.14 0.05 0.05);
+        alpha           0.05;
+        referenceField  uniform (4.119077881997793 -9.47323056839833 0.0);
+        value           uniform (4.119077881997793 -9.47323056839833 0.0);
+    }
+
+    terrain
+    {
+
+        type            uniformFixedValue;
+        value           uniform (0 0 0);
+        uniformValue    constant (0 0 0);
+        
+
+    }
+
+    
+    theVent
+    {
+
+        type groovyBC;
+		value uniform (0 0 0);
+
+        lookuptables (
+            {
+                name    impulseULookup;
+                outOfBounds clamp;
+                fileName    "./assets/bc_U_theVent.data";
+                file    "./assets/bc_U_theVent.data";
+                //readerType csv;
+                //hasHeaderLine true;
+                //timeColumn 0;
+                //valueColumns ( 1 );
+                //seperator ",";
+            }
+
+            {
+                name    impulseNLookup;
+                outOfBounds clamp;
+                fileName    "./assets/bc_N_theVent.data";
+                file    "./assets/bc_N_theVent.data";
+                //readerType csv;
+                //hasHeaderLine true;
+                //timeColumn 0;
+                //valueColumns ( 1 );
+                //seperator ",";
+            }
+        );
+
+      
+
+		variables ( 
+                    // keep commented for reference
+                    //"xd=max(pos().x)-min(pos().x);"
+					//"yd=max(pos().y)-min(pos().y);"
+					//"zd=(max(pos().z)+min(pos().z))/2.0;"
+					//"center=vector(min(pos().x)+xd/2.0,min(pos().y)+yd/2.0 ,zd);"
+					//"avgvec=sum(normal())/mag(sum(normal()));"
+                    //"radius=50.0;"
+                    //"center=vector(569773.30,4754164.50,2184.0454);"
+
+                    "zedvec=vector(0,0,-1);"
+                    "uvel=impulseULookup(time());"
+                    "normalZ=impulseNLookup(time());"
+                    "outvec=(normalZ > 0) ? zedvec : normal();"
+                    "outvel=uvel;"
+
+                    //"outvel=0.0;"
+                    //"nullvec=vector(0,0,0);"
+					
+					);
+            //valueExpression "mag(pos () -center ) < radius ? (outvel+(randNormal()*10.0))*normal() : vector(0,0,0)";
+
+            valueExpression "outvel*outvec";
+            //valueExpression "outvel*nullvec";
+
+
+    }
+    
+    
+    ground
+    {
+        type            uniformFixedValue;
+        value           uniform (0 0 0);
+        uniformValue    constant (0 0 0);
+    }
+    
+
+    top
+    {
+        type slip;
+    }
+
+    east
+    {
+        type slip;
+    }
+
+    west
+    {
+        type slip;
+    }
+
+    "proc.*"
+    {
+        type            processor;
+    }
+    //#include "include/sideAndTopPatches"
+}
+
+
+// ************************************************************************* //

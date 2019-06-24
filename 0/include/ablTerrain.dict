@@ -1,0 +1,9 @@
+/*--------------------------------*- C++ -*----------------------------------*  =========                 |
+  \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \    /   O peration     | Website:  https://openfoam.org
+  	\  /    A nd           | Version:  dev
+  	 \/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+// args.theta == 0.000000
+flowDir  (4.119077881997793 -9.47323056839833 0.0);
+zGround	uniform 1893.097656;

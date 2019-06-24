@@ -1,0 +1,115 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  4.1                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      T;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include        "include/initialConditions"
+
+dimensions      [0 0 0 1 0 0 0];
+
+
+internalField   uniform $temperatureField;
+
+
+boundaryField
+{
+
+	
+    theVent
+	{
+
+        type groovyBC;
+		value uniform 0.0;
+
+        lookuptables (
+            {
+                    name    impulseTLookup;
+                    outOfBounds clamp;
+                    fileName    "./assets/bc_T_theVent.data";
+                    file    "./assets/bc_T_theVent.data";
+            }
+        );
+		variables ( 
+
+                    "outtemp=impulseTLookup(time());"
+                    
+					);
+        valueExpression "(outtemp+(randNormal()*25.0))";
+        
+	}
+    
+
+    top
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+    
+    ground
+	{
+        type            zeroGradient;
+    }
+    
+
+	inlet
+	{
+        type            zeroGradient;
+    }
+
+	outlet
+	{
+        type            zeroGradient;
+    }
+
+	east
+	{
+        type            zeroGradient;
+    }
+
+	west
+	{
+        type            zeroGradient;
+    }
+
+    terrain
+    {
+
+        type            uniformFixedValue;
+        uniformValue    constant $temperatureField;
+        /*
+        type groovyBC;
+		value uniform 0.0;
+		variables ( //"xd=max(pos().x)-min(pos().x);"
+					//"yd=max(pos().y)-min(pos().y);"
+					//"zd=(max(pos().z)+min(pos().z))/2.0;"
+					//"center=vector(min(pos().x)+xd/2.0,min(pos().y)+yd/2.0 ,zd);"
+                    "center=vector(569773.30,4754164.50,2084.0454);"
+					"radius=50.0;"
+                    "outtemp=1000.0;"
+                    "pastfive=(time() > 6.0) ? 1.0 : -1.0;"
+                    "radius=pastfive < 0 ? 50.0 : 75.0;"
+                    "outtemp=pastfive < 0 ? 1000.0 : 600.0;"
+					);
+		valueExpression "mag(pos () - center ) < radius ? (outtemp+(randNormal()*25.0)) : 0.0";
+        */
+    }
+
+    "proc.*"
+    {
+        type            processor;
+    }
+
+}
+
+// ************************************************************************* //
