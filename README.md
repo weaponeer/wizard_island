@@ -1,4 +1,6 @@
-# wizard_island part one
+# wizard_island part one 
+wizard Island, Crater Lake OR
+EPSG:26710 - NAD27 / UTM zone 10N (meters)
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/QJsHWu-NO_o/0.jpg)](https://www.youtube.com/watch?v=QJsHWu-NO_o)
 
