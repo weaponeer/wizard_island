@@ -4,7 +4,7 @@ EPSG:26710 - NAD27 / UTM zone 10N (meters)
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/QJsHWu-NO_o/0.jpg)](https://www.youtube.com/watch?v=QJsHWu-NO_o)
 
-This is a test case for Matteo Cerminara's [convectiveFoam](https://github.com/cerminara/convectiveFoam) solver, with lagrangian particles.  There is also a modification the to the PatchInjection submodel to allow for tracking of parcels from more than one injection model. Here is a link to the modified [convectiveFoam](https://github.com/weaponeer/convectiveFoam) solver used with this case.
+This is an OpenFOAM test case for Matteo Cerminara's [convectiveFoam](https://github.com/cerminara/convectiveFoam) solver, with lagrangian particles.  There is also a modification the to the PatchInjection submodel to allow for tracking of parcels from more than one injection model. Here is a link to the modified [convectiveFoam](https://github.com/weaponeer/convectiveFoam) solver used with this case.
 
 You will need swak4foam installed to run this case.
 
