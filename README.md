@@ -12,7 +12,7 @@ This case is currently configured to run on 8 processors, I have run on 4, howev
 
 The wind is at 330' approx., at 10m/s.  Explore the dictonaries for specifics of other parameters.
 
-Here is a 90 second run of this case.  Same parameters.
+Here is a 7.5 second run of this case.  Same parameters.
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/xn36MFUY8QE/0.jpg)](https://www.youtube.com/watch?v=xn36MFUY8QE)
 
